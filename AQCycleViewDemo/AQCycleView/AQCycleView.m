@@ -9,6 +9,8 @@
 #import "AQCycleView.h"
 #import "AQCycleViewCell.h"
 
+#define viewNumberScale 100
+
 static NSString * const cellID = @"AQCycleViewCell";
 
 @interface AQCycleView ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
@@ -20,6 +22,7 @@ static NSString * const cellID = @"AQCycleViewCell";
 
 @implementation AQCycleView
 
+#pragma mark -- 快捷创建方法
 + (instancetype)cycleViewWithFrame:(CGRect)frame localImageArray:(NSArray *)localImageArray{
     AQCycleView *view = [[AQCycleView alloc] initWithFrame:frame];
     view.localImageArray = localImageArray;
@@ -34,6 +37,7 @@ static NSString * const cellID = @"AQCycleViewCell";
     return view;
 }
 
+#pragma mark -- INIT
 - (instancetype)initWithFrame:(CGRect)frame{
     if (self = [super initWithFrame:frame]) {
         [self setupContentView];
@@ -42,9 +46,35 @@ static NSString * const cellID = @"AQCycleViewCell";
 }
 
 - (void)setupContentView{
+    [self setupDefaultConfig];
+
     [self addSubview:self.mainView];
 }
 
+#pragma mark -- 设置无限轮播和自动滚动
+- (void)setupDefaultConfig{
+    _isInfinite = YES;
+    _isAutoScroll = YES;
+    if (_mainView) {
+        [_mainView reloadData];
+    }
+}
+
+- (void)setIsInfinite:(BOOL)isInfinite{
+    _isInfinite = isInfinite;
+    if (_mainView) {
+        [_mainView reloadData];
+    }
+}
+
+- (void)setIsAutoScroll:(BOOL)isAutoScroll{
+    _isAutoScroll = isAutoScroll;
+    if (_mainView) {
+        [_mainView reloadData];
+    }
+}
+
+#pragma mark -- 手动设置图片数组
 - (void)setLocalImageArray:(NSArray *)localImageArray{
     _localImageArray = localImageArray;
     _isLocale = YES;
@@ -61,6 +91,7 @@ static NSString * const cellID = @"AQCycleViewCell";
     }
 }
 
+#pragma mark -- 主界面相关
 - (UICollectionView *)mainView{
     if (_mainView == nil) {
         
@@ -84,6 +115,7 @@ static NSString * const cellID = @"AQCycleViewCell";
     _mainView.frame = self.bounds;
 };
 
+#pragma mark -- 数据源方法
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     return 1;
 }
@@ -106,6 +138,7 @@ static NSString * const cellID = @"AQCycleViewCell";
     return cell;
 }
 
+#pragma mark -- 代理方法
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     NSLog(@"%ld", indexPath.item);
 }
