@@ -2,6 +2,7 @@
 使用CollectionView实现View的重用，尽量使用最少代码，实现最多功能
 ##使用方法
 1.下载文件夹，找到AQCyleView文件夹，拖入项目中
+
 2.导入头文件
 
 ```
@@ -28,9 +29,10 @@
     self.webView = webView;
     [self.view addSubview:self.webView];
     self.webView.delegate = self;
-    self.webView.webImageArray = webImageArray;
+    self.webView.webImageArray = webImageArray;
     
-    ```
-    
+```
+
+
 ##反馈
 有问题请联系qinjipeng@foxmail.com
