@@ -8,7 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
+@class AQCycleView;
+@protocol AQCycleViewDelegate <NSObject>
+
+- (void)cycleView:(AQCycleView *)cycleView didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
+
+@end
+
 @interface AQCycleView : UIView
+/**
+ 代理属性
+ */
+@property (nonatomic, weak) id<AQCycleViewDelegate> delegate;
+
 /**
  手动添加本地图片数组
  */

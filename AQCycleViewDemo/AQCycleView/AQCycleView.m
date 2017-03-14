@@ -148,7 +148,11 @@ static NSString * const cellID = @"AQCycleViewCell";
 
 #pragma mark -- 代理方法
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    NSLog(@"%ld", indexPath.item);
+    NSInteger itemIndex = indexPath.item % (_imageCount/imageCountScale);
+    NSLog(@"点击了第%ld张图片", itemIndex);
+    if ([self.delegate respondsToSelector:@selector(cycleView:didSelectItemAtIndexPath:)]) {
+        [self.delegate cycleView:self didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:itemIndex inSection:indexPath.section]];
+    }
 }
 
 #pragma mark -- 计算当前的itemIndex

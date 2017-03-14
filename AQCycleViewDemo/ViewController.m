@@ -11,7 +11,9 @@
 
 #define ScreenSize [UIScreen mainScreen].bounds.size
 
-@interface ViewController ()
+@interface ViewController ()<AQCycleViewDelegate>
+@property (nonatomic, strong) AQCycleView *localView;
+@property (nonatomic, strong) AQCycleView *webView;
 
 @end
 
@@ -21,10 +23,11 @@
     [super viewDidLoad];
     // 本地图片
     CGRect localImageFrame = CGRectMake(0, 64, ScreenSize.width, 200);
-    NSArray *localImageArray = @[@"f1.jpg", @"f2.jpg", @"f3.jpg" , @"f4.jpg", @"f5.jpg"];
+    NSArray *localImageArray = @[@"f1.jpg", @"f2.jpg", @"f3.jpg" , @"f4.jpg"];
     AQCycleView *view = [AQCycleView cycleViewWithFrame:localImageFrame localImageArray:localImageArray];
-    NSLog(@"%@", view);
-    [self.view addSubview:view];
+    self.localView = view;
+    [self.view addSubview:self.localView];
+    self.localView.delegate = self;
     
     // 网络图片
     CGRect webImageFrame = CGRectMake(0, 300, ScreenSize.width, 200);
@@ -34,9 +37,17 @@
                                @"http://img.article.pchome.net/00/47/42/55/pic_lib/wm/01.jpg",
                                @"http://img.tupianzj.com/uploads/Bizhi/mn84_1366.jpg"];
     AQCycleView *view2 = [AQCycleView cycleViewWithFrame:webImageFrame webImgaeArray:webImageArray];
-    NSLog(@"%@", view2);
-    [self.view addSubview:view2];
-    // Do any additional setup after loading the view, typically from a nib.
+    self.webView = view2;
+    [self.view addSubview:self.webView];
+    self.webView.delegate = self;
+}
+
+- (void)cycleView:(AQCycleView *)cycleView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (cycleView == self.localView) {
+        NSLog(@"localView:%ld", indexPath.item);
+    }else if (cycleView == self.webView){
+        NSLog(@"webView:%ld", indexPath.item);
+    }
 }
 
 
