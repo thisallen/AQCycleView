@@ -21,6 +21,7 @@ static NSString * const cellID = @"AQCycleViewCell";
 @property (nonatomic, assign) NSInteger imageCount;
 @property (nonatomic, assign) NSInteger totalImageCount;
 
+@property (nonatomic, strong) UILabel *pageNumLabel;
 @end
 
 @implementation AQCycleView
@@ -52,6 +53,7 @@ static NSString * const cellID = @"AQCycleViewCell";
     [self setupDefaultConfig];
 
     [self addSubview:self.mainView];
+    [self addSubview:self.pageNumLabel];
 }
 
 #pragma mark -- 设置无限轮播和自动滚动
@@ -76,7 +78,7 @@ static NSString * const cellID = @"AQCycleViewCell";
 
 - (void)setupNewStatus{
     if (_imageCount && _isInfinite == NO) {
-        _imageCount = _imageCount / imageCountScale;
+        _totalImageCount = _imageCount;
     }
     if (_mainView) {
         [_mainView reloadData];
@@ -122,10 +124,21 @@ static NSString * const cellID = @"AQCycleViewCell";
     return _mainView;
 }
 
+- (UILabel *)pageNumLabel{
+    if (_pageNumLabel ==nil) {
+        UILabel *pageNumLabel = [[UILabel alloc] init];
+        pageNumLabel.text = @"1/4";
+        pageNumLabel.textColor = [UIColor whiteColor];
+        _pageNumLabel = pageNumLabel;
+    }
+    return _pageNumLabel;
+}
+
 - (void)layoutSubviews{
     [super layoutSubviews];
     _mainLayout.itemSize = self.bounds.size;
     _mainView.frame = self.bounds;
+    _pageNumLabel.frame = CGRectMake(0, self.bounds.size.height - 30, self.bounds.size.width, 30);
     if (_isInfinite && _mainView.contentOffset.x == 0 && _totalImageCount > 0) {
         [self.mainView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_totalImageCount * 0.5 inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
     }
@@ -159,6 +172,8 @@ static NSString * const cellID = @"AQCycleViewCell";
 
 #pragma mark -- 计算当前的itemIndex
 - (NSInteger)itemIndex:(NSIndexPath *)indexPath{
+    NSInteger itemIndex = _isInfinite ? indexPath.item % (_totalImageCount/imageCountScale) : indexPath.item;
+    NSLog(@"%ld", itemIndex);
     return _isInfinite ? indexPath.item % (_totalImageCount/imageCountScale) : indexPath.item;
 }
 @end
