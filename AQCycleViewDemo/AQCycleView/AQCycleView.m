@@ -129,6 +129,7 @@ static NSString * const cellID = @"AQCycleViewCell";
         UILabel *pageNumLabel = [[UILabel alloc] init];
         pageNumLabel.text = @"1/4";
         pageNumLabel.textColor = [UIColor whiteColor];
+        pageNumLabel.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
         _pageNumLabel = pageNumLabel;
     }
     return _pageNumLabel;
@@ -175,5 +176,26 @@ static NSString * const cellID = @"AQCycleViewCell";
     NSInteger itemIndex = _isInfinite ? indexPath.item % (_totalImageCount/imageCountScale) : indexPath.item;
     NSLog(@"%ld", itemIndex);
     return _isInfinite ? indexPath.item % (_totalImageCount/imageCountScale) : indexPath.item;
+}
+
+- (NSInteger)currentIndex
+{
+    if (_mainView.bounds.size.width == 0 || _mainView.bounds.size.height == 0) {
+        return 0;
+    }
+    
+    NSInteger index = 0;
+    if (_mainLayout.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
+        index = (_mainView.contentOffset.x + _mainLayout.itemSize.width * 0.5) / _mainLayout.itemSize.width;
+    } else {
+        index = (_mainView.contentOffset.y + _mainLayout.itemSize.height * 0.5) / _mainLayout.itemSize.height;
+    }
+    NSLog(@"%ld", index);
+    return index;
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    NSInteger currentIndex = _isInfinite ? [self currentIndex] % (_totalImageCount/imageCountScale) : [self currentIndex];
+    _pageNumLabel.text = [NSString stringWithFormat:@"%ld/%ld", currentIndex+1, _imageCount];
 }
 @end
