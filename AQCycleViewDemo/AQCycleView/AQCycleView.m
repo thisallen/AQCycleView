@@ -9,7 +9,7 @@
 #import "AQCycleView.h"
 #import "AQCycleViewCell.h"
 
-#define viewNumberScale 100
+#define imageCountScale 100
 
 static NSString * const cellID = @"AQCycleViewCell";
 
@@ -18,6 +18,8 @@ static NSString * const cellID = @"AQCycleViewCell";
 @property (nonatomic, strong) UICollectionView *mainView;
 @property (nonatomic, strong) UICollectionViewFlowLayout *mainLayout;
 @property (nonatomic, assign) BOOL isLocale;
+@property (nonatomic, assign) NSInteger imageCount;
+
 @end
 
 @implementation AQCycleView
@@ -55,6 +57,7 @@ static NSString * const cellID = @"AQCycleViewCell";
 - (void)setupDefaultConfig{
     _isInfinite = YES;
     _isAutoScroll = YES;
+    _imageCount = 0;
     if (_mainView) {
         [_mainView reloadData];
     }
@@ -122,18 +125,23 @@ static NSString * const cellID = @"AQCycleViewCell";
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     if (_isLocale) {
-        return _localImageArray.count;
+        _imageCount = _localImageArray.count;
     }else{
-        return _webImageArray.count;
+        _imageCount = _webImageArray.count;
     }
+    if (_isInfinite) {
+        _imageCount = _imageCount * imageCountScale;
+    }
+    return _imageCount;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     AQCycleViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellID forIndexPath:indexPath];
+    NSInteger itemIndex = indexPath.item % (_imageCount/imageCountScale);
     if (_isLocale) {
-        cell.imageName = _localImageArray[indexPath.item];
+        cell.imageName = _localImageArray[itemIndex];
     }else{
-        cell.imageURL = _webImageArray[indexPath.item];
+        cell.imageURL = _webImageArray[itemIndex];
     }
     return cell;
 }
@@ -141,5 +149,12 @@ static NSString * const cellID = @"AQCycleViewCell";
 #pragma mark -- 代理方法
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     NSLog(@"%ld", indexPath.item);
+}
+
+#pragma mark -- 计算当前的itemIndex
+- (NSInteger)itemIndex:(NSIndexPath *)indexPath{
+    NSInteger itemIndex;
+    
+    return itemIndex;
 }
 @end
