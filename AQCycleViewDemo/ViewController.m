@@ -24,8 +24,9 @@
     // 本地图片
     CGRect localImageFrame = CGRectMake(0, 64, ScreenSize.width, 200);
     NSArray *localImageArray = @[@"f1.jpg", @"f2.jpg", @"f3.jpg" , @"f4.jpg"];
-    AQCycleView *view = [AQCycleView cycleViewWithFrame:localImageFrame localImageArray:localImageArray];
-    self.localView = view;
+    AQCycleView *localView = [AQCycleView cycleViewWithFrame:localImageFrame localImageArray:localImageArray];
+    self.localView = localView;
+    self.localView.isInfinite = NO;
     [self.view addSubview:self.localView];
     self.localView.delegate = self;
     
@@ -36,10 +37,13 @@
                                @"http://img.pconline.com.cn/images/upload/upc/tx/wallpaper/1210/11/c3/14372065_1349940418555.jpg",
                                @"http://img.article.pchome.net/00/47/42/55/pic_lib/wm/01.jpg",
                                @"http://img.tupianzj.com/uploads/Bizhi/mn84_1366.jpg"];
-    AQCycleView *view2 = [AQCycleView cycleViewWithFrame:webImageFrame webImgaeArray:webImageArray];
-    self.webView = view2;
+//    AQCycleView *view2 = [AQCycleView cycleViewWithFrame:webImageFrame webImgaeArray:webImageArray];
+    AQCycleView *webView = [[AQCycleView alloc] init];
+    webView.frame = webImageFrame;
+    self.webView = webView;
     [self.view addSubview:self.webView];
     self.webView.delegate = self;
+    self.webView.webImageArray = webImageArray;
 }
 
 - (void)cycleView:(AQCycleView *)cycleView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
